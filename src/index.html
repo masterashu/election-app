@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Portal</title>
+</head>
+
+<body>
+    <button class="enableEthereumButton">Enable Ethereum</button>
+    <h1 id="accountAddress"></h1>
+    <h2>List of Voters</h2>
+    <ol id="voters">
+    </ol>
+
+    <h2>List of Candidates</h2>
+    <ol id="candidates">
+    </ol>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="web3.min.js"></script>
+    <script type="text/javascript" src="truffle-contract.js"></script>
+    <script src="app.js"></script>
+    <script>
+        const ethereumButton = document.querySelector('.enableEthereumButton');
+        ethereumButton.addEventListener('click', async function () {
+            //Will Start the metamask extension
+            App.accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            App.initWeb3();
+        });
+
+    </script>
+</body>
+
+</html>

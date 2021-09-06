@@ -1,0 +1,22 @@
+{
+  "name": "election-app",
+  "version": "1.0.0",
+  "description": "An Election Dapp aimed towards Privacy and Trust.",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "frontend": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ashutosh Chauhan, Vitthal Inani, Mani Rajeev, Valluri Deepak",
+  "license": "MIT",
+  "dependencies": {
+    "bulma": "^0.9.3",
+    "lite-server": "^2.6.1",
+    "truffle": "^5.4.9",
+    "truffle-contract": "^4.0.31",
+    "web3": "^1.5.2"
+  }
+}

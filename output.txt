@@ -1,0 +1,72 @@
+
+Compiling your contracts...
+===========================
+> Compiling .\contracts\Election.sol
+> Compiling .\contracts\Migrations.sol
+> Artifacts written to E:\IIIT Sri City\Semester-7\BTP\proj\election-app\build\contracts
+> Compiled successfully using:
+   - solc: 0.8.0+commit.c7dfd78e.Emscripten.clang
+
+
+
+Starting migrations...
+======================
+> Network name:    'development'
+> Network id:      5777
+> Block gas limit: 6721975 (0x6691b7)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0x88f79884bd2630ca1c364d52e5ae7529d5571e54a4e8bf3b693049ca1d5b5dc4
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xC3A45B9239B27Bb559e36748f90539e37c6829E8
+   > block number:        73
+   > block timestamp:     1630899989
+   > account:             0xae0576d495b9a1b4d1b85ce104F8A02a60a12C98
+   > balance:             99.57942776
+   > gas used:            244300 (0x3ba4c)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.004886 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:            0.004886 ETH
+
+
+2_start_election.js
+===================
+
+   Replacing 'Election'
+   --------------------
+   > transaction hash:    0xb0886bb161f55d691cda41286a33d005bfc9219206b159e17ebbef128e546f22
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xd438F1C2652c70765A9F2Cb47e1f0092A590C816
+   > block number:        75
+   > block timestamp:     1630900006
+   > account:             0xae0576d495b9a1b4d1b85ce104F8A02a60a12C98
+   > balance:             99.5401274
+   > gas used:            1922505 (0x1d55c9)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0384501 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:           0.0384501 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.0433361 ETH
+
+
