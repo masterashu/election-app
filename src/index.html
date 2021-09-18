@@ -5,33 +5,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        span{
+            color: blue;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="web3.min.js"></script>
+    <script src="truffle-contract.js"></script>
+    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+    <script src="https://raw.githubusercontent.com/travist/jsencrypt/master/bin/jsencrypt.min.js"></script>
     <title>Election Portal</title>
 </head>
 
 <body>
-    <button class="enableEthereumButton">Enable Ethereum</button>
+    <button id="enableEthereumButton" disabled>Enable Ethereum</button>
+    <h1>Election Name: <span id="electionName"></span> </h1>
+    <h1>Election Status: <span id="electionStatus"></span></h1>
+    <h1>Election Public Key: <div><textarea cols="68" rows="4" name="pubKey" id="electionPublicKey" disabled > </textarea> </div>
+    </h1>
     <h1 id="accountAddress"></h1>
-    <h2>List of Voters</h2>
+    <h2>List of Voters:</h2>
     <ol id="voters">
     </ol>
 
-    <h2>List of Candidates</h2>
+    <h2>List of Candidates:</h2>
     <ol id="candidates">
     </ol>
+    <button id="castVoteButton" disabled>Cast Vote</button>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="web3.min.js"></script>
-    <script type="text/javascript" src="truffle-contract.js"></script>
+    <h2>List of Votes:</h2>
+    <button id="showVotesButton" disabled>Show All Votes</button>
+    <ol id="votes">
+    </ol>
     <script src="app.js"></script>
-    <script>
-        const ethereumButton = document.querySelector('.enableEthereumButton');
-        ethereumButton.addEventListener('click', async function () {
-            //Will Start the metamask extension
-            App.accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            App.initWeb3();
-        });
-
-    </script>
 </body>
 
 </html>

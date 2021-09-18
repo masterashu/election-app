@@ -8,7 +8,7 @@ contract Owner{
     }
 
     modifier onlyOwner {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "This function is restricted to the contract's owner");
         _;
     }    
 }
@@ -21,19 +21,18 @@ contract Election is Owner {
 
     struct Vote {
         bytes encryptedVoteData;
-        bytes32 signature;
         bool voted;
     }
 
     enum ElectionState { Created, Ready, InProgress, Concluded }
 
-    string name;
+    string public name;
 
     ElectionState public state;
 
-    bytes public publicKey;
+    string public publicKey;
 
-    bytes public privateKey;
+    string public privateKey;
 
     address[] public candidates;
 
@@ -45,7 +44,7 @@ contract Election is Owner {
     
     // constructor 
     constructor(string memory _name, 
-                bytes memory _publicKey,
+                string memory _publicKey,
                 address[] memory _voters, 
                 address[] memory _candidates) {
         name = _name;
@@ -57,27 +56,27 @@ contract Election is Owner {
         }
     }
     
-    function revealPrivateKey(bytes memory _privateKey) onlyOwner public {
-        require(state == ElectionState.Concluded);
+    function revealPrivateKey(string calldata _privateKey) onlyOwner public {
+        require(state == ElectionState.Concluded, "The Election has not been concluded. Conclude the Election first to reveal the Private Key.");
         privateKey = _privateKey;
     }
     
     function initiateElection() public onlyOwner {
-        require(state == ElectionState.Created);
+        require(state == ElectionState.Created, "You cannot Initiate the Election at this point");
         state = ElectionState.InProgress;
     }
     
     function concludeElection() public onlyOwner {
-        require(state == ElectionState.InProgress);
+        require(state == ElectionState.InProgress, "The Election is currently not in Progress.");
         state = ElectionState.Concluded;
     }
     
-    function castVote(bytes memory voteData, bytes32 signature) public {
-        require(voterEligiblity[msg.sender]);
-        require(!votes[msg.sender].voted);
-        require(state == ElectionState.InProgress);
+    function castVote(bytes calldata voteData) public {
+        require(!votes[msg.sender].voted, "You have already voted for this election.");
+        require(voterEligiblity[msg.sender], "You are not eligible to vote for this election.");
+        require(state == ElectionState.InProgress, "The Election is concluded or have not been started yet.");
         
-        Vote memory vote = Vote(voteData, signature, true);
+        Vote memory vote = Vote(voteData, true);
         voterEligiblity[msg.sender] = false;
         votes[msg.sender] = vote;
     }

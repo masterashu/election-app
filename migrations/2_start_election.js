@@ -4,7 +4,8 @@ const fs = require("fs");
 
 module.exports = function (deployer) {
   const ename = "Election";
-  const ePubKey = Web3.utils.hexToBytes("0x01234567890");
+  const fPubKey = fs.openSync("data/KeyPub.pem");
+  const ePubKey = fs.readFileSync(fPubKey).toString().trimRight();
   const voters = [];
   const voterData = fs.openSync("data/voters.txt");
   fs.readFileSync(voterData).toString().split("\n").forEach((line) => {
