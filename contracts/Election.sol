@@ -20,61 +20,62 @@ contract Election is Owner {
     // }
 
     struct Vote {
-        bytes encryptedVoteData;
+        string encryptedVoteData;
         bool voted;
     }
 
-    enum ElectionState { Created, Ready, InProgress, Concluded }
+    enum ElectionState { Created, VotingInProgress, VotingConcluded, ResultsDeclared }
 
     string public name;
 
     ElectionState public state;
-
-    string public publicKey;
-
-    string public privateKey;
 
     address[] public candidates;
 
     address[] public voters;
 
     mapping (address => bool) public voterEligiblity;
+    
+    mapping (address => string) public publicKey;
 
     mapping (address => Vote) public votes;
     
     // constructor 
     constructor(string memory _name, 
-                string memory _publicKey,
                 address[] memory _voters, 
                 address[] memory _candidates) {
         name = _name;
         voters = _voters;
-        publicKey = _publicKey;
         candidates = _candidates;
         for(uint i = 0; i < _voters.length; i++){
             voterEligiblity[_voters[i]] = true;
         }
     }
     
-    function revealPrivateKey(string calldata _privateKey) onlyOwner public {
-        require(state == ElectionState.Concluded, "The Election has not been concluded. Conclude the Election first to reveal the Private Key.");
-        privateKey = _privateKey;
+    function revealPublicKey(string calldata _publicKey) public {
+        require(state == ElectionState.VotingConcluded, "The Voting has not been concluded. Wait for the voting to finish before revealing your Public Key.");
+        publicKey[msg.sender] = _publicKey;
     }
     
     function initiateElection() public onlyOwner {
         require(state == ElectionState.Created, "You cannot Initiate the Election at this point");
-        state = ElectionState.InProgress;
+        state = ElectionState.VotingInProgress;
+    }
+    
+    function concludeVoting() public onlyOwner {
+        require(state == ElectionState.VotingInProgress, "The Election is currently not in Progress.");
+        state = ElectionState.VotingConcluded;
     }
     
     function concludeElection() public onlyOwner {
-        require(state == ElectionState.InProgress, "The Election is currently not in Progress.");
-        state = ElectionState.Concluded;
+        require(state == ElectionState.VotingConcluded, "The Voting is currently not concluded");
+        state = ElectionState.ResultsDeclared;
     }
     
-    function castVote(bytes calldata voteData) public {
-        require(!votes[msg.sender].voted, "You have already voted for this election.");
+    function castVote(string calldata voteData) public {
+        // require(!votes[msg.sender].voted, "You have already voted for this election.");
         require(voterEligiblity[msg.sender], "You are not eligible to vote for this election.");
-        require(state == ElectionState.InProgress, "The Election is concluded or have not been started yet.");
+        require(state == ElectionState.VotingInProgress, "The Election is concluded or have not been started yet.");
         
         Vote memory vote = Vote(voteData, true);
         voterEligiblity[msg.sender] = false;

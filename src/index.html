@@ -12,10 +12,10 @@
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="web3.min.js"></script>
-    <script src="truffle-contract.js"></script>
     <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
-    <script src="https://raw.githubusercontent.com/travist/jsencrypt/master/bin/jsencrypt.min.js"></script>
+    <script src="vendor/web3/dist/web3.min.js"></script>
+    <script src="vendor/truffle-contract/dist/truffle-contract.min.js"></script>
+    <script src="vendor/jsencrypt/bin/jsencrypt.min.js"></script>
     <title>Election Portal</title>
 </head>
 
@@ -23,8 +23,6 @@
     <button id="enableEthereumButton" disabled>Enable Ethereum</button>
     <h1>Election Name: <span id="electionName"></span> </h1>
     <h1>Election Status: <span id="electionStatus"></span></h1>
-    <h1>Election Public Key: <div><textarea cols="68" rows="4" name="pubKey" id="electionPublicKey" disabled > </textarea> </div>
-    </h1>
     <h1 id="accountAddress"></h1>
     <h2>List of Voters:</h2>
     <ol id="voters">
@@ -34,11 +32,46 @@
     <ol id="candidates">
     </ol>
     <button id="castVoteButton" disabled>Cast Vote</button>
-
+    
     <h2>List of Votes:</h2>
     <button id="showVotesButton" disabled>Show All Votes</button>
     <ol id="votes">
     </ol>
+    
+    <h1>Publish your Secret Key</h1>
+    <button id="revealPublicKey">Publish Secret Key</button>
+
+    <h1>Create New Ethereum Account</h1>
+    <button id="newAccount">Create New Account</button>
+    <h2>Your Ethereum Address:
+        <div>
+            <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPublicKey" disabled></textarea>
+            <button id="dlEthPublicKey">Download</button>
+        </div>
+    </h2>
+    <h2>Your Ethereum Private Key:
+        <div>
+            <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPrivateKey" disabled></textarea>
+            <button id="dlEthPrivateKey">Download</button>
+        </div>
+    </h2>
+
+
+    <h1>Create One-Time RSA Encryption Pair</h1>
+    <button id="newRsaPair">Create New RSA Pair</button>
+    <h2>Your RSA Secret Key:
+        <div>
+            <textarea cols="68" rows="15" name="rsaPrivateKey" id="rsaPrivateKey" disabled></textarea>
+            <button id="dlRsaPrivateKey">Download</button>
+        </div>
+    </h2>
+    <!-- <h2>Your RSA Public Key:
+        <div>
+            <textarea cols="68" rows="6" name="rsaPublicKey" id="rsaPublicKey" disabled></textarea>
+            <button id="dlRsaPublicKey">Download</button>
+        </div>
+    </h2> -->
+
     <script src="app.js"></script>
 </body>
 

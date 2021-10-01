@@ -4,8 +4,6 @@ const fs = require("fs");
 
 module.exports = function (deployer) {
   const ename = "Election";
-  const fPubKey = fs.openSync("data/KeyPub.pem");
-  const ePubKey = fs.readFileSync(fPubKey).toString().trimRight();
   const voters = [];
   const voterData = fs.openSync("data/voters.txt");
   fs.readFileSync(voterData).toString().split("\n").forEach((line) => {
@@ -18,5 +16,5 @@ module.exports = function (deployer) {
     if (line.length == 0) return;
     candidates.push(line.trim());
   });
-  deployer.deploy(Election, ename, ePubKey, voters, candidates);
+  deployer.deploy(Election, ename, voters, candidates);
 };
