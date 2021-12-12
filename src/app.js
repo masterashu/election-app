@@ -7,6 +7,8 @@ const App = {
   accounts: ['0x0'],
   hasVoted: false,
   voters: [],
+  electionPublicKey: null,
+  electionPrivateKey: null,
 
   initWeb3: async function () {
     console.log('initWeb3');
@@ -96,12 +98,12 @@ const App = {
   castVote: async function () {
     const selectedCandidate = $('input[name=candidates]:checked').val();
     if (selectedCandidate) {
-      let privateKey = await App.getUserKey();
+      let privateKey = await App.getElectionPrivateKey();
       if (!privateKey) {
         alert("You didn't select a Private Key")
         return;
       }
-      let encryptedVote = '';
+      let encryptedVote;
       try {
         encryptedVote = await App.encryptVote(selectedCandidate, privateKey);
       } catch {
@@ -144,6 +146,16 @@ const App = {
     });
   },
 
+  getElectionPublicKey: async function () {
+    let e = await App.contracts.Election.deployed();
+    return await e.publicKey();
+  },
+
+  getElectionPrivateKey: async function () {
+    let e = await App.contracts.Election.deployed();
+    return await e.publicKey();
+  },
+
   encryptVote: function (voteData, privateKey) {
     const crypt = new JSEncrypt();
     crypt.setPrivateKey(privateKey)
@@ -159,8 +171,11 @@ const App = {
     if (!encryptedVoteData) {
       return null;
     }
-    let e = await App.contracts.Election.deployed();
-    let publicKey = await e.publicKey(voter);
+    let publicKey = await App.getElectionPublicKey();
+    if (!publicKey) {
+      alert("The Election Key hasn't been published yet.");
+      return null;
+    }
     const crypt = new JSEncrypt();
     crypt.setPrivateKey(publicKey);
     console.log(`deconding vote ${encryptedVoteData} of ${voter} using`);
