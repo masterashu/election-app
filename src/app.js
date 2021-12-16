@@ -7,6 +7,7 @@ const App = {
   accounts: ['0x0'],
   hasVoted: false,
   voters: [],
+  candidateColor: {},
   electionPublicKey: null,
   electionPrivateKey: null,
 
@@ -61,15 +62,17 @@ const App = {
       electionInstance = instance;
       return electionInstance.getAllVoters();
     }).then(function (voters) {
-      var votersList = $("#voters");
-      votersList.empty();
+      var votersList = Metro.getPlugin("#voters", 'listview');
+      votersList.clean();
       App.voters = voters;
       $("#showVotesButton").removeAttr('disabled');
 
       for (var i = 0; i < voters.length; i++) {
         // Render candidate Result
-        var voterTemplate = "<li>" + voters[i] + "</li>";
-        votersList.append(voterTemplate);
+        votersList.add(null, {
+          caption: `<tt>${voters[i]}</tt>`,
+          icon: '<span class="mif-user" />',
+        });
       }
     });
 
@@ -82,8 +85,9 @@ const App = {
       candidatesList.empty();
 
       for (var i = 0; i < candidates.length; i++) {
+        App.candidateColor[candidates[i]] = getRandomColor();
         // Render candidate Result
-        var voterTemplate = `<li><input type="radio" class="candidateOption" id="candidate-${candidates[i]}" name="candidates" value="${candidates[i]}"> <label for="candidate-${candidates[i]}">${candidates[i]}</label><br></li>`;
+        var voterTemplate = `<li><input type="radio" class="candidateOption" id="candidate-${candidates[i]}" name="candidates" value="${candidates[i]}"> <label for="candidate-${candidates[i]}"> <span class=\"mif-user\" /> &nbsp;  &nbsp; <tt style="color: ${App.candidateColor[candidates[i]]}"> ${candidates[i]} </tt> </label><br></li>`;
         candidatesList.append(voterTemplate);
       }
 
@@ -173,7 +177,7 @@ const App = {
     }
     let publicKey = await App.getElectionPublicKey();
     if (!publicKey) {
-      alert("The Election Key hasn't been published yet.");
+      //alert("The Election Key hasn't been published yet.");
       return null;
     }
     const crypt = new JSEncrypt();
@@ -186,25 +190,21 @@ const App = {
 
   showVotes: async function () {
     let inst = await App.contracts.Election.deployed();
-    var votesList = $("#votes");
-    votesList.empty();
-    App.voters.forEach(function (voter) {
-      inst.votes(voter).then(function (result) {
-        votesList.append(`<li id="vote-${voter}"> ${voter} : ${(result.voted ? result.encryptedVoteData : 'Not Voted')} </li>`);
+    var votesList = Metro.getPlugin("#votes", 'listview');
+
+    console.log(App.voters);
+    App.voters.forEach(async function (voter) {
+      inst.votes(voter).then(async function (result) {
+        let decrypted = (App.stateEnum == 3) ?  (await App.decryptVote(voter, result.encryptedVoteData)) : "Election Still in Progress";
+        votesList.add(null, {
+          icon: '<span class="mif-user" />',
+          caption: `<tt>${voter}</tt>`,
+          decrypted: (result.voted) ? `<span class="mif-user" /><tt style="color: ${App.candidateColor[decrypted]};">` + decrypted + '</tt>' : null,
+          vote: `<tt>${result.encryptedVoteData}</tt>`,
+        });
         if (!result.voted) {
           return;
         }
-        const decryptButton = document.createElement('button');
-        decryptButton.append('Decode Vote')
-        decryptButton.addEventListener('click', async function () {
-          if (App.stateEnum < 3) {
-            alert("The election is still in progress.");
-            return;
-          }
-          let decryptedVote = await App.decryptVote(voter, result.encryptedVoteData);
-          alert(decryptedVote);
-        });
-        votesList.append(decryptButton)
       })
     });
   },
@@ -255,11 +255,20 @@ function download(content, filename, contentType) {
   a.click();
 }
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 
 $(window).load(function () {
   App.ethereumButton = document.getElementById('enableEthereumButton');
   App.ethereumButton.addEventListener('click', async function () {
-    //Will Start the metamask extension
+    // Will Start the metamask extension
     App.accounts = await ethereum.request({ method: 'eth_requestAccounts' });
     ethereum.on('accountsChanged', function (accounts) {
       App.render();
@@ -274,14 +283,6 @@ $(window).load(function () {
   App.showVotesButton.addEventListener('click', App.showVotes);
 
   document.getElementById('newAccount').addEventListener('click', App.generateEthereumAccount);
-  document.getElementById('newRsaPair').addEventListener('click', App.generateRsaKeyPair);
-
-  document.getElementById('dlRsaPrivateKey').addEventListener('click', () => {
-    download($('#rsaPrivateKey').val(), 'rsaPrivateKey.pem')
-  });
-  // document.getElementById('dlRsaPublicKey').addEventListener('click', () => {
-  //   download($('#rsaPublicKey').val(), 'rsaPublicKey.pem')
-  // });
 
   document.getElementById('dlEthPrivateKey').addEventListener('click', () => {
     download($('#ethereumPrivateKey').val(), 'ethereumPrivateKey.pem');
@@ -289,5 +290,5 @@ $(window).load(function () {
   document.getElementById('dlEthPublicKey').addEventListener('click', () => {
     download($('#ethereumPublicKey').val(), 'ethereumPublicKey.pem');
   });
-  document.getElementById('revealPublicKey').addEventListener('click', App.revealPublicKey);
+  // document.getElementById('revealPublicKey').addEventListener('click', App.revealPublicKey);
 });

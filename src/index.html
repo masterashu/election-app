@@ -4,76 +4,90 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <style>
-        span{
+        span {
             color: blue;
         }
+
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
     <script src="vendor/web3/dist/web3.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.min.js"></script>
     <script src="vendor/jsencrypt/bin/jsencrypt.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <title>Election Portal</title>
 </head>
 
 <body>
-    <button id="enableEthereumButton" disabled>Enable Ethereum</button>
-    <h1>Election Name: <span id="electionName"></span> </h1>
-    <h1>Election Status: <span id="electionStatus"></span></h1>
-    <h1>Election Public Key: <div><textarea cols="68" rows="4" name="pubKey" id="electionPublicKey" disabled hidden> </textarea> </div>
-    <h1 id="accountAddress"></h1>
-    <h2>List of Voters:</h2>
-    <ol id="voters">
-    </ol>
-
-    <h2>List of Candidates:</h2>
-    <ol id="candidates">
-    </ol>
-    <button id="castVoteButton" disabled>Cast Vote</button>
-    
-    <h2>List of Votes:</h2>
-    <button id="showVotesButton" disabled>Show All Votes</button>
-    <ol id="votes">
-    </ol>
-    
-    <h1>Publish your Secret Key</h1>
-    <button id="revealPublicKey">Publish Secret Key</button>
-
-    <h1>Create New Ethereum Account</h1>
-    <button id="newAccount">Create New Account</button>
-    <h2>Your Ethereum Address:
-        <div>
-            <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPublicKey" disabled></textarea>
-            <button id="dlEthPublicKey">Download</button>
+    <!-- <div class="eth-btn" id="enableEthereumButton">
+        <div class="eth-icon-wrapper">
+            <img class="eth-icon-svg"
+                src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" />
         </div>
-    </h2>
-    <h2>Your Ethereum Private Key:
-        <div>
-            <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPrivateKey" disabled></textarea>
-            <button id="dlEthPrivateKey">Download</button>
+        <p class="btn-text"><b>Sign in with Ethereum</b></p>
+    </div> -->
+    <h1 style="margin-left: 10px;">Ethereum Voting Portal
+        <span><button id="enableEthereumButton" class="button info  shadowed outline" style="margin: 25px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" />
+                <strong>Sign in with Ethereum</strong>
+            </button></span>
+            <h1 id="accountAddress"></h1>
+    </h1>
+    <ul data-cls-tabs="flex-justify-start" data-role="tabs" data-expand="true">
+        <li><a href="#_target_1">Election Details</a></li>
+        <li><a href="#_target_2">Cast Vote</a></li>
+        <li><a href="#_target_3">List of Voters</a></li>
+        <li><a href="#_target_4">View Results</a></li>
+        <li><a href="#_target_5">Create Ethereum Account</a></li>
+    </ul>
+    <div class="border bd-default no-border-top p-2">
+        <div id="_target_1">
+            <h1>Election Name: <span id="electionName"></span> </h1>
+            <h1>Election Status: <span id="electionStatus"></span></h1>
+            <h1 hidden>Election Public Key: <div><textarea cols="68" rows="4" name="pubKey" id="electionPublicKey"
+                        disabled hidden> </textarea> </div>
         </div>
-    </h2>
-
-
-    <h1>Create One-Time RSA Encryption Pair</h1>
-    <button id="newRsaPair">Create New RSA Pair</button>
-    <h2>Your RSA Secret Key:
-        <div>
-            <textarea cols="68" rows="15" name="rsaPrivateKey" id="rsaPrivateKey" disabled></textarea>
-            <button id="dlRsaPrivateKey">Download</button>
+        <div id="_target_2">
+            <h2>List of Candidates:</h2>
+            <ul data-role="listview" id="candidates">
+            </ul>
+            <button class="button dark outline" id="castVoteButton" disabled><strong>Cast Vote</strong></button>
         </div>
-    </h2>
-    <!-- <h2>Your RSA Public Key:
-        <div>
-            <textarea cols="68" rows="6" name="rsaPublicKey" id="rsaPublicKey" disabled></textarea>
-            <button id="dlRsaPublicKey">Download</button>
+        <div id="_target_3">
+            <h2>List of Voters:</h2>
+            <ul data-role="listview" id="voters">
+            </ul>
         </div>
-    </h2> -->
+        <div id="_target_4">
+            <h2>List of Votes:</h2>
+            <button class="button dark outline" id="showVotesButton" disabled><strong>Show All Votes</strong></button>
+            <ul style="width: 100%;" data-role="listview" data-view="table" id="votes" data-structure='{"decrypted": true, "vote": true}'>
+            </ul>
+        </div>
+        <div id="_target_5">
+            <h1>Create New Ethereum Account</h1>
+            <button class="button dark outline" id="newAccount"><strong>Create New Account</strong></button>
+            <h2>Your Ethereum Address:
+                <div>
+                    <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPublicKey" disabled></textarea>
+                    <button class="button dark outline" id="dlEthPublicKey"><strong>Download</strong></button>
+                </div>
+            </h2>
+            <h2>Your Ethereum Private Key:
+                <div>
+                    <textarea cols="68" rows="1" name="ethPubKey" id="ethereumPrivateKey" disabled></textarea>
+                    <button class="button dark outline" id="dlEthPrivateKey"><strong>Download</strong></button>
+                </div>
+            </h2>
+        </div>
+    </div>
 
     <script src="app.js"></script>
+    <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
 </body>
 
 </html>
